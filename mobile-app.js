@@ -39,6 +39,7 @@ class MobileLoveApp {
       days: document.getElementById('days'),
       loveBtn: document.getElementById('loveBtn'),
       heartBtn: document.getElementById('heartBtn'),
+      installManualBtn: document.getElementById('installManualBtn'),
       playBtn: document.getElementById('playBtn'),
       audio: document.getElementById('audio'),
       volume: document.getElementById('volume'),
@@ -558,7 +559,17 @@ class MobileLoveApp {
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       this.deferredPrompt = e;
-      this.showInstallPrompt();
+      // 显示手动安装按钮
+      if (this.elements.installManualBtn) {
+        this.elements.installManualBtn.style.display = 'block';
+        this.elements.installManualBtn.addEventListener('click', () => {
+          this.installPWA();
+        });
+      }
+      // 也显示自动提示
+      setTimeout(() => {
+        this.showInstallPrompt();
+      }, 3000);
     });
 
     // 监听PWA安装完成
