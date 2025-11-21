@@ -1,31 +1,10 @@
 // Service Worker for PWA
 const CACHE_NAME = 'beibei-love-v1.0.0';
 const urlsToCache = [
-  '/mobile.html',
-  '/mobile-styles.css',
-  '/mobile-app.js',
-  '/assets/FirstMeet.jpg',
-  '/assets/Beautiful2.jpg',
-  '/assets/SeaBeautiful.jpg',
-  '/assets/Qingdao.jpg',
-  '/assets/QingdaoSheep.jpg',
-  '/assets/XianDatangHert.jpg',
-  '/assets/XianDatangHug.jpg',
-  '/assets/陈柯宇 - 直到遇见了你,我只喜欢你.mp3',
-  '/background_photo/05c667d4c3901466caa43d86605c8896.jpg',
-  '/background_photo/17c04ded88e2bdad483a73e20aba29a0.jpg',
-  '/background_photo/18a325bd95025a47cb9bfaa4da42c04c.jpg',
-  '/background_photo/19d1b3a49ea6e3b6ddbb336d4f586099.jpg',
-  '/background_photo/19e3b947af4dec061f2a6dbeb798d1d8.jpg',
-  '/background_photo/1c410e6c22c855c560b8cc585e6d3aa7.jpg',
-  '/background_photo/2032a170a05dbaa8514ead827f59916a.jpg',
-  '/background_photo/f05790ae21818af5fa438e1ae075438a.jpg',
-  '/background_photo/f13c89252e1cd363fd0d4e1ba16d085e.jpg',
-  '/background_photo/f5b1f76c2785e49e0fb690f174de0d4f.jpg',
-  '/background_photo/fb72cad14fd7f2752d586861da276a9c.jpg',
-  '/background_photo/fb97b82439a458a0319b3248e3d5e1ba.jpg',
-  '/background_photo/fbe3ac859ba2ae672f2cdf4e55cf384d.jpg',
-  '/background_photo/fd489655f1843ff5d4538e64d4d69e95.jpg'
+  './mobile.html',
+  './mobile-styles.css',
+  './mobile-app.js',
+  './manifest.json'
 ];
 
 // 安装事件 - 缓存资源
@@ -93,7 +72,7 @@ self.addEventListener('fetch', event => {
       .catch(() => {
         // 网络失败时的后备方案
         if (event.request.destination === 'document') {
-          return caches.match('/mobile.html');
+          return caches.match('./mobile.html');
         }
       })
   );
