@@ -27,6 +27,7 @@ class MobileLoveApp {
     this.startTypewriter();
     this.initAudio();
     this.initShakeDetection();
+    this.initPhotoWall();
   }
 
   // 绑定DOM元素
@@ -380,6 +381,160 @@ class MobileLoveApp {
         easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
       }).onfinish = () => particle.remove();
     }
+  }
+
+  // 初始化背景照片墙
+  initPhotoWall() {
+    // 所有可用照片路径
+    const allPhotos = [
+      'background_photo/05c667d4c3901466caa43d86605c8896.jpg',
+      'background_photo/17c04ded88e2bdad483a73e20aba29a0.jpg',
+      'background_photo/18a325bd95025a47cb9bfaa4da42c04c.jpg',
+      'background_photo/19d1b3a49ea6e3b6ddbb336d4f586099.jpg',
+      'background_photo/19e3b947af4dec061f2a6dbeb798d1d8.jpg',
+      'background_photo/1c410e6c22c855c560b8cc585e6d3aa7.jpg',
+      'background_photo/2032a170a05dbaa8514ead827f59916a.jpg',
+      'background_photo/f05790ae21818af5fa438e1ae075438a.jpg',
+      'background_photo/f13c89252e1cd363fd0d4e1ba16d085e.jpg',
+      'background_photo/f5b1f76c2785e49e0fb690f174de0d4f.jpg',
+      'background_photo/fb72cad14fd7f2752d586861da276a9c.jpg',
+      'background_photo/fb97b82439a458a0319b3248e3d5e1ba.jpg',
+      'background_photo/fbe3ac859ba2ae672f2cdf4e55cf384d.jpg',
+      'background_photo/fd489655f1843ff5d4538e64d4d69e95.jpg'
+    ];
+
+    // 创建背景墙容器
+    const photoWall = document.createElement('div');
+    photoWall.className = 'photo-wall';
+    document.body.insertBefore(photoWall, document.body.firstChild);
+
+    // 随机选择10张照片并创建元素
+    this.photoItems = [];
+    this.currentPhotoSet = this.selectRandomPhotos(allPhotos, 10);
+    
+    this.currentPhotoSet.forEach((photoSrc, index) => {
+      const item = this.createPhotoItem(photoSrc, index);
+      photoWall.appendChild(item);
+      this.photoItems.push(item);
+    });
+
+    // 延迟显示照片，创造层次感
+    setTimeout(() => {
+      this.photoItems.forEach((item, index) => {
+        setTimeout(() => {
+          item.classList.add('visible', 'floating');
+        }, index * 300);
+      });
+    }, 1000);
+
+    // 启动照片轮换
+    this.startPhotoRotation(allPhotos);
+  }
+
+  // 随机选择照片
+  selectRandomPhotos(allPhotos, count) {
+    const selected = [];
+    const used = new Set();
+    
+    while (selected.length < count) {
+      const randomIndex = Math.floor(Math.random() * allPhotos.length);
+      if (!used.has(randomIndex)) {
+        used.add(randomIndex);
+        selected.push(allPhotos[randomIndex]);
+      }
+    }
+    
+    return selected;
+  }
+
+  // 创建照片元素
+  createPhotoItem(photoSrc, index) {
+    const item = document.createElement('div');
+    item.className = 'photo-item';
+    
+    const img = document.createElement('img');
+    img.src = photoSrc;
+    img.alt = '美好回忆';
+    img.loading = 'lazy';
+    
+    // 随机位置和大小
+    const size = 100 + Math.random() * 80;
+    const left = Math.random() * 85;
+    const top = Math.random() * 85;
+    const rotation = -20 + Math.random() * 40;
+    const zIndex = Math.floor(Math.random() * 10);
+    
+    item.style.width = size + 'px';
+    item.style.height = size * (0.7 + Math.random() * 0.6) + 'px';
+    item.style.left = left + '%';
+    item.style.top = top + '%';
+    item.style.setProperty('--rotation', rotation + 'deg');
+    item.style.transform = `rotate(${rotation}deg)`;
+    item.style.zIndex = -10 - zIndex;
+    
+    // 添加随机动画延迟
+    item.style.animationDelay = (Math.random() * 4) + 's';
+    
+    item.appendChild(img);
+    return item;
+  }
+
+  // 开始照片轮换
+  startPhotoRotation(allPhotos) {
+    setInterval(() => {
+      this.rotatePhotos(allPhotos);
+    }, 12000); // 每12秒轮换一次
+  }
+
+  // 轮换照片
+  rotatePhotos(allPhotos) {
+    // 随机选择3张照片进行替换
+    const itemsToReplace = [];
+    const usedIndices = new Set();
+    
+    while (itemsToReplace.length < 3) {
+      const randomIndex = Math.floor(Math.random() * this.photoItems.length);
+      if (!usedIndices.has(randomIndex)) {
+        usedIndices.add(randomIndex);
+        itemsToReplace.push(this.photoItems[randomIndex]);
+      }
+    }
+
+    itemsToReplace.forEach((item, index) => {
+      setTimeout(() => {
+        // 淡出
+        item.classList.remove('visible');
+        item.classList.add('fade-out');
+        
+        setTimeout(() => {
+          // 更换图片和位置
+          const newPhotoSrc = allPhotos[Math.floor(Math.random() * allPhotos.length)];
+          const img = item.querySelector('img');
+          img.src = newPhotoSrc;
+          
+          // 重新随机位置
+          const size = 100 + Math.random() * 80;
+          const left = Math.random() * 85;
+          const top = Math.random() * 85;
+          const rotation = -20 + Math.random() * 40;
+          
+          item.style.width = size + 'px';
+          item.style.height = size * (0.7 + Math.random() * 0.6) + 'px';
+          item.style.left = left + '%';
+          item.style.top = top + '%';
+          item.style.setProperty('--rotation', rotation + 'deg');
+          item.style.transform = `rotate(${rotation}deg)`;
+          
+          // 淡入
+          item.classList.remove('fade-out');
+          item.classList.add('fade-in', 'visible', 'floating');
+          
+          setTimeout(() => {
+            item.classList.remove('fade-in');
+          }, 1000);
+        }, 1000);
+      }, index * 500); // 错开替换时间
+    });
   }
 }
 
