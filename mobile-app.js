@@ -379,13 +379,13 @@ function initLongPressEaster() {
   hero.addEventListener('mouseleave', () => clearTimeout(pressTimer));
 }
 
-// 创建照片墙背景 - 移动端优化
+// 创建照片墙背景 - 简化版本
 function initPhotoWall() {
   const photoWall = document.createElement('div');
   photoWall.className = 'photo-wall';
   
-  // 获取所有照片路径（使用实际存在的照片）
-  const photos = [
+  // 所有可用照片路径
+  const allPhotos = [
     'background_photo/05c667d4c3901466caa43d86605c8896.jpg',
     'background_photo/17c04ded88e2bdad483a73e20aba29a0.jpg',
     'background_photo/18a325bd95025a47cb9bfaa4da42c04c.jpg',
@@ -402,66 +402,70 @@ function initPhotoWall() {
     'background_photo/fd489655f1843ff5d4538e64d4d69e95.jpg'
   ];
   
-  let photoIndex = 0;
-  const totalPhotos = Math.min(photos.length * 1.5, 80); // 移动端限制数量
+  // 随机选择10张照片
+  const selectedPhotos = [];
+  const usedIndices = new Set();
   
-  // 创建照片（移动端优化数量）
-  for (let i = 0; i < totalPhotos; i++) {
+  while (selectedPhotos.length < 10) {
+    const randomIndex = Math.floor(Math.random() * allPhotos.length);
+    if (!usedIndices.has(randomIndex)) {
+      usedIndices.add(randomIndex);
+      selectedPhotos.push(allPhotos[randomIndex]);
+    }
+  }
+  
+  // 创建10张照片
+  selectedPhotos.forEach((photoSrc, i) => {
     const item = document.createElement('div');
     item.className = 'photo-item';
     
     const img = document.createElement('img');
-    img.src = photos[photoIndex];
+    img.src = photoSrc;
     img.alt = '回忆';
-    img.loading = 'lazy'; // 懒加载优化
+    img.loading = 'lazy';
     
     // 移动端适配的尺寸
-    const size = 100 + Math.random() * 120;
-    const left = Math.random() * 110 - 5;
-    const top = Math.random() * 110 - 5;
-    const rotation = -20 + Math.random() * 40;
-    const zIndex = Math.floor(Math.random() * 8);
+    const size = 120 + Math.random() * 100;
+    const left = Math.random() * 100;
+    const top = Math.random() * 100;
+    const rotation = -30 + Math.random() * 60;
+    const zIndex = Math.floor(Math.random() * 10);
     
     item.style.width = size + 'px';
-    item.style.height = size * (0.8 + Math.random() * 0.4) + 'px';
+    item.style.height = size * (0.7 + Math.random() * 0.6) + 'px';
     item.style.left = left + '%';
     item.style.top = top + '%';
     item.style.setProperty('--rotation', rotation + 'deg');
     item.style.transform = `rotate(${rotation}deg)`;
     item.style.zIndex = -10 - zIndex;
     
-    // 缓缓出现的动画延迟
-    const delay = i * 0.05 + Math.random() * 0.3;
-    const flickerDelay = Math.random() * 6;
-    item.style.animationDelay = `${delay}s, ${delay + 3 + flickerDelay}s`;
+    // 简化的动画延迟
+    const delay = i * 0.2 + Math.random() * 0.5;
+    const flickerDelay = Math.random() * 4;
+    item.style.animationDelay = `${delay}s, ${delay + 2 + flickerDelay}s`;
     item.style.opacity = '0';
     item.classList.add('fade-in-photo');
     
     item.appendChild(img);
     photoWall.appendChild(item);
-    
-    // 每1.5张照片换下一张图片
-    if ((i + 1) % 1.5 === 0) {
-      photoIndex = (photoIndex + 1) % photos.length;
-    }
-  }
+  });
   
   document.body.insertBefore(photoWall, document.body.firstChild);
   
-  // 启动移动端优化的图片轮换
-  startMobilePhotoRotation(photoWall, photos);
+  // 启动简化的图片轮换
+  startSimplePhotoRotation(photoWall, allPhotos);
 }
 
-// 移动端照片轮换优化
-function startMobilePhotoRotation(photoWall, photos) {
+// 简化的照片轮换
+function startSimplePhotoRotation(photoWall, allPhotos) {
   const photoItems = Array.from(photoWall.querySelectorAll('.photo-item'));
   
   function rotatePhotos() {
-    // 移动端只替换5张照片
+    // 每次随机替换3张照片
     const selectedItems = [];
     const usedIndices = new Set();
     
-    while (selectedItems.length < 5 && selectedItems.length < photoItems.length) {
+    while (selectedItems.length < 3 && selectedItems.length < photoItems.length) {
       const randomIndex = Math.floor(Math.random() * photoItems.length);
       if (!usedIndices.has(randomIndex)) {
         usedIndices.add(randomIndex);
@@ -471,53 +475,47 @@ function startMobilePhotoRotation(photoWall, photos) {
     
     selectedItems.forEach((item, index) => {
       const img = item.querySelector('img');
-      const newPhotoSrc = photos[Math.floor(Math.random() * photos.length)];
-      const disappearDelay = index * 100;
+      const newPhotoSrc = allPhotos[Math.floor(Math.random() * allPhotos.length)];
+      const delay = index * 200; // 错开替换时间
       
       setTimeout(() => {
-        item.style.animation = 'none';
-        item.classList.remove('fade-in-photo', 'rotating-in');
-        item.classList.add('rotating-out');
+        // 简单的淡出淡入效果
+        item.style.transition = 'opacity 0.5s ease';
+        item.style.opacity = '0';
         
         setTimeout(() => {
           img.src = newPhotoSrc;
           
-          const size = 100 + Math.random() * 120;
-          const left = Math.random() * 110 - 5;
-          const top = Math.random() * 110 - 5;
-          const rotation = -20 + Math.random() * 40;
+          // 重新随机位置和大小
+          const size = 120 + Math.random() * 100;
+          const left = Math.random() * 100;
+          const top = Math.random() * 100;
+          const rotation = -30 + Math.random() * 60;
           
           item.style.width = size + 'px';
-          item.style.height = size * (0.8 + Math.random() * 0.4) + 'px';
+          item.style.height = size * (0.7 + Math.random() * 0.6) + 'px';
           item.style.left = left + '%';
           item.style.top = top + '%';
           item.style.setProperty('--rotation', rotation + 'deg');
+          item.style.transform = `rotate(${rotation}deg)`;
           
-          item.classList.remove('rotating-out');
-          item.classList.add('rotating-in');
-          
-          setTimeout(() => {
-            item.classList.remove('rotating-in');
-            item.classList.add('fade-in-photo');
-            item.style.animation = 'photoFlicker 8s ease-in-out infinite';
-            const flickerDelay = Math.random() * 6;
-            item.style.animationDelay = flickerDelay + 's';
-          }, 1000);
-        }, 600);
-      }, disappearDelay);
+          // 淡入
+          item.style.opacity = '0.7';
+        }, 500);
+      }, delay);
     });
   }
   
-  // 移动端更长的间隔
+  // 每10-15秒轮换一次
   function scheduleNextRotation() {
-    const delay = 8000 + Math.random() * 5000;
+    const delay = 10000 + Math.random() * 5000;
     setTimeout(() => {
       rotatePhotos();
       scheduleNextRotation();
     }, delay);
   }
   
-  setTimeout(scheduleNextRotation, 6000);
+  setTimeout(scheduleNextRotation, 8000);
 }
 
 // 爱心爆炸效果
