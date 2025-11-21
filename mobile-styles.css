@@ -28,10 +28,79 @@ body {
   color: var(--text);
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
+  position: relative;
 }
 
 .app {
   min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
+/* 背景照片墙 */
+.photo-wall {
+  position: fixed;
+  top: -20px;
+  left: -20px;
+  right: -20px;
+  bottom: -20px;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.photo-wall::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(14, 12, 21, 0.7);
+  backdrop-filter: blur(1px);
+  z-index: 1;
+}
+
+.photo-item {
+  position: absolute;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  will-change: opacity, transform;
+  backface-visibility: hidden;
+  transition: opacity 1s ease-in-out;
+}
+
+.photo-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(1px) brightness(0.8) saturate(1.2);
+  transform: translateZ(0);
+}
+
+.photo-item.visible {
+  opacity: 0.6;
+}
+
+.photo-item.fade-out {
+  opacity: 0;
+}
+
+.photo-item.fade-in {
+  opacity: 0.6;
+}
+
+/* 照片动画 */
+@keyframes photoFloat {
+  0%, 100% {
+    transform: rotate(var(--rotation)) translateY(0px);
+  }
+  50% {
+    transform: rotate(var(--rotation)) translateY(-10px);
+  }
+}
+
+.photo-item.floating {
+  animation: photoFloat 8s ease-in-out infinite;
 }
 
 /* 首屏样式 */
