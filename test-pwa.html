@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PWA测试页面</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .test-item {
+      background: white;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .success { color: green; }
+    .error { color: red; }
+    .warning { color: orange; }
+    img {
+      max-width: 100px;
+      margin: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>PWA配置测试</h1>
+  
+  <div class="test-item">
+    <h3>1. Manifest文件检测</h3>
+    <div id="manifestTest">检测中...</div>
+  </div>
+
+  <div class="test-item">
+    <h3>2. Service Worker检测</h3>
+    <div id="swTest">检测中...</div>
+  </div>
+
+  <div class="test-item">
+    <h3>3. 图标文件检测</h3>
+    <div id="iconTest">检测中...</div>
+  </div>
+
+  <div class="test-item">
+    <h3>4. HTTPS检测</h3>
+    <div id="httpsTest">检测中...</div>
+  </div>
+
+  <div class="test-item">
+    <h3>5. 安装提示检测</h3>
+    <div id="installTest">检测中...</div>
+  </div>
+
+  <script>
+    // 检测HTTPS
+    const httpsTest = document.getElementById('httpsTest');
+    if (location.protocol === 'https:') {
+      httpsTest.innerHTML = '<span class="success">✓ HTTPS已启用</span>';
+    } else {
+      httpsTest.innerHTML = '<span class="error">✗ 需要HTTPS (当前: ' + location.protocol + ')</span>';
+    }
+
+    // 检测Manifest
+    fetch('manifest.json')
+      .then(response => response.json())
+      .then(manifest => {
+        const manifestTest = document.getElementById('manifestTest');
+        manifestTest.innerHTML = `
+          <span class="success">✓ Manifest文件加载成功</span><br>
+          <pre>${JSON.stringify(manifest, null, 2)}</pre>
+        `;
+      })
+      .catch(err => {
+        document.getElementById('manifestTest').innerHTML = 
+          '<span class="error">✗ Manifest加载失败: ' + err.message + '</span>';
+      });
+
+    // 检测Service Worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations()
+        .then(registrations => {
+          const swTest = document.getElementById('swTest');
+          if (registrations.length > 0) {
+            swTest.innerHTML = '<span class="success">✓ Service Worker已注册 (' + registrations.length + '个)</span>';
+          } else {
+            swTest.innerHTML = '<span class="warning">⚠ Service Worker未注册</span>';
+          }
+        });
+    } else {
+      document.getElementById('swTest').innerHTML = 
+        '<span class="error">✗ 浏览器不支持Service Worker</span>';
+    }
+
+    // 检测图标
+    const iconTest = document.getElementById('iconTest');
+    const icons = ['icons/icon-192x192.png', 'icons/icon-512x512.png'];
+    let iconHTML = '';
+    
+    icons.forEach(iconPath => {
+      const img = new Image();
+      img.onload = function() {
+        iconHTML += `<div><span class="success">✓ ${iconPath}</span><br><img src="${iconPath}"></div>`;
+        iconTest.innerHTML = iconHTML;
+      };
+      img.onerror = function() {
+        iconHTML += `<div><span class="error">✗ ${iconPath} 加载失败</span></div>`;
+        iconTest.innerHTML = iconHTML;
+      };
+      img.src = iconPath;
+    });
+
+    // 检测安装提示
+    let installPromptDetected = false;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      installPromptDetected = true;
+      document.getElementById('installTest').innerHTML = 
+        '<span class="success">✓ 安装提示事件已触发！可以安装PWA</span>';
+    });
+
+    setTimeout(() => {
+      if (!installPromptDetected) {
+        const installTest = document.getElementById('installTest');
+        installTest.innerHTML = `
+          <span class="warning">⚠ 未检测到安装提示</span><br>
+          <small>可能原因：<br>
+          1. 已经安装过<br>
+          2. 不满足PWA安装条件<br>
+          3. 浏览器不支持<br>
+          4. 需要用户交互后才触发</small>
+        `;
+      }
+    }, 3000);
+  </script>
+</body>
+</html>
