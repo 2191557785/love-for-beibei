@@ -642,3 +642,82 @@ button, .option {
   -webkit-user-select: none;
   user-select: none;
 }
+
+/* PWA 安装提示动画 */
+@keyframes slideUp {
+  0% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.install-content {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  color: white;
+}
+
+.install-icon {
+  font-size: 2rem;
+}
+
+.install-text h3 {
+  margin: 0 0 5px 0;
+  font-size: 1.1rem;
+}
+
+.install-text p {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.install-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.install-btn:active {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(0.95);
+}
+
+.install-close {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 5px;
+  margin-left: auto;
+}
+
+.success-content {
+  color: white;
+}
+
+.success-icon {
+  font-size: 3rem;
+  margin-bottom: 15px;
+}
+
+.success-content h3 {
+  margin: 0 0 10px 0;
+  font-size: 1.3rem;
+}
+
+.success-content p {
+  margin: 0;
+  opacity: 0.9;
+}
