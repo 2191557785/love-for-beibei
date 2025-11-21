@@ -555,10 +555,22 @@ class MobileLoveApp {
       });
     }
 
+    // 检查是否为移动设备
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
+    // 移动设备上延迟显示安装按钮
+    if (isMobile) {
+      setTimeout(() => {
+        this.showMobileInstallGuide();
+      }, 5000);
+    }
+
     // 监听PWA安装提示
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       this.deferredPrompt = e;
+      console.log('PWA安装提示已准备');
+      
       // 显示手动安装按钮
       if (this.elements.installManualBtn) {
         this.elements.installManualBtn.style.display = 'block';
@@ -566,6 +578,7 @@ class MobileLoveApp {
           this.installPWA();
         });
       }
+      
       // 也显示自动提示
       setTimeout(() => {
         this.showInstallPrompt();
@@ -681,6 +694,95 @@ class MobileLoveApp {
     setTimeout(() => {
       successMsg.remove();
     }, 3000);
+  }
+
+  // 显示移动端安装指南
+  showMobileInstallGuide() {
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    const isAndroid = /Android/.test(navigator.userAgent);
+    
+    let instructions = '';
+    if (isIOS) {
+      instructions = `
+        <div class="install-steps">
+          <h3>📱 安装到iPhone/iPad</h3>
+          <div class="step">1️⃣ 点击底部分享按钮 <span style="font-size: 1.2em;">⬆️</span></div>
+          <div class="step">2️⃣ 选择"添加到主屏幕"</div>
+          <div class="step">3️⃣ 点击"添加"完成安装</div>
+        </div>
+      `;
+    } else if (isAndroid) {
+      instructions = `
+        <div class="install-steps">
+          <h3>📱 安装到Android手机</h3>
+          <div class="step">1️⃣ 点击浏览器菜单 <span style="font-size: 1.2em;">⋮</span></div>
+          <div class="step">2️⃣ 选择"添加到主屏幕"或"安装应用"</div>
+          <div class="step">3️⃣ 点击"安装"完成</div>
+        </div>
+      `;
+    } else {
+      instructions = `
+        <div class="install-steps">
+          <h3>📱 安装APP到手机</h3>
+          <div class="step">1️⃣ 查看浏览器菜单</div>
+          <div class="step">2️⃣ 寻找"添加到主屏幕"选项</div>
+          <div class="step">3️⃣ 按提示完成安装</div>
+        </div>
+      `;
+    }
+
+    const guideModal = document.createElement('div');
+    guideModal.className = 'install-guide-modal';
+    guideModal.innerHTML = `
+      <div class="guide-content">
+        <div class="guide-header">
+          <span class="guide-icon">💕</span>
+          <h2>把我们的爱装进手机</h2>
+          <button class="guide-close" id="guideClose">×</button>
+        </div>
+        ${instructions}
+        <div class="guide-footer">
+          <p>安装后可以像原生APP一样使用哦！</p>
+        </div>
+      </div>
+    `;
+
+    guideModal.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      animation: fadeIn 0.3s ease-out;
+    `;
+
+    document.body.appendChild(guideModal);
+
+    // 绑定关闭事件
+    const closeBtn = guideModal.querySelector('#guideClose');
+    closeBtn.addEventListener('click', () => {
+      guideModal.remove();
+    });
+
+    // 点击背景关闭
+    guideModal.addEventListener('click', (e) => {
+      if (e.target === guideModal) {
+        guideModal.remove();
+      }
+    });
+
+    // 10秒后自动关闭
+    setTimeout(() => {
+      if (guideModal.parentNode) {
+        guideModal.remove();
+      }
+    }, 10000);
   }
 }
 
