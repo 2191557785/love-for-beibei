@@ -2,12 +2,12 @@
   "name": "给贝贝的爱",
   "short_name": "贝贝的爱",
   "description": "专属于张贝贝的爱的表白APP",
-  "start_url": "/mobile.html",
+  "start_url": "./mobile.html",
   "display": "standalone",
   "background_color": "#667eea",
   "theme_color": "#ff6b9d",
   "orientation": "portrait",
-  "scope": "/",
+  "scope": "./",
   "lang": "zh-CN",
   "icons": [
     {
@@ -49,7 +49,7 @@
       "name": "直接打开表白页",
       "short_name": "表白页",
       "description": "直接打开给贝贝的表白页面",
-      "url": "/mobile.html",
+      "url": "./mobile.html",
       "icons": [
         {
           "src": "icons/icon-96x96.png",
