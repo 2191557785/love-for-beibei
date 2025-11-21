@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>给你的小小心意</title>
+  <meta name="description" content="给最爱的你的一份专属小惊喜" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Nunito:wght@300;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>💖</text></svg>">
+</head>
+<body>
+  <!-- 背景粒子与流星 -->
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
+
+  <!-- 顶部 Hero -->
+  <header class="hero" id="top">
+    <div class="hero-inner glass">
+      <h1 class="brand">
+        <span id="yourName">给亲爱的贝贝</span>
+      </h1>
+      <p class="typewriter">
+        <span id="typewriterText" data-lines='["贝贝，遇见你，是我所有美好故事的开始。","贝贝，今天，想把心里的话，慢慢说给你听。","贝贝，愿以后每一天，都有你。"]'></span>
+        <span class="cursor">|</span>
+      </p>
+      <div class="cta">
+        <button id="loveButton" class="btn-heart" aria-label="点击有惊喜">
+          <span class="heart">❤</span>
+          <span> 点我开启惊喜</span>
+        </button>
+      </div>
+      <div class="meta">
+        <span id="anniversary" title="纪念日">我们的第 <span id="daysCounter">0</span> 天</span>
+      </div>
+    </div>
+    <div class="scroll-hint">向下滑动</div>
+  </header>
+
+  <!-- 甜蜜弹窗 -->
+  <dialog id="sweetDialog" class="sweet">
+    <form method="dialog">
+      <h3>给贝贝的一封小情书</h3>
+      <p id="loveNote">贝贝，从遇见你开始，星星也有了归宿。</p>
+      <menu>
+        <button value="close" class="btn">收下</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <!-- 记忆时间线 -->
+  <section id="timeline" class="section">
+    <h2 class="section-title">我们的时光</h2>
+    <div class="timeline">
+      <div class="tl-item reveal">
+        <div class="date">第一次去海边</div>
+        <div class="card glass">
+          <img src="assets\FirstMeet.jpg" alt="第一次去海边" loading="lazy" decoding="async" />
+          <p>那天的风，刚好也很喜欢你。</p>
+        </div>
+      </div>
+      <div class="tl-item reveal">
+        <div class="date">海边很美，你也是</div>
+        <div class="card glass">
+          <img src="assets\SeaBeautiful.jpg" alt="海边很美，你也是" loading="lazy" decoding="async" />
+          <p>从此，手心里有了最安心的答案。</p>
+        </div>
+      </div>
+      <div class="tl-item reveal">
+        <div class="date">轮渡真的好美呀</div>
+        <div class="card glass">
+          <img src="assets\QingdaoSheep.jpg" alt="轮渡真的好美呀" loading="lazy" decoding="async" />
+          <p>风景很美，但最美的是你看风景的样子。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 照片画廊 -->
+  <section id="gallery" class="section">
+    <h2 class="section-title">小小画廊</h2>
+    <div class="grid">
+      <figure class="reveal"><img src="assets\XianDatangHert.jpg" alt="甜蜜瞬间1" loading="lazy" decoding="async"><figcaption>甜蜜1</figcaption></figure>
+      <figure class="reveal"><img src="assets\XianDatangHug.jpg" alt="甜蜜瞬间2" loading="lazy" decoding="async"><figcaption>甜蜜2</figcaption></figure>
+      <figure class="reveal"><img src="assets\Qingdao.jpg" alt="甜蜜瞬间3" loading="lazy" decoding="async"><figcaption>甜蜜3</figcaption></figure>
+      <figure class="reveal"><img src="assets\Beautiful2.jpg" alt="甜蜜瞬间4" loading="lazy" decoding="async"><figcaption>甜蜜4</figcaption></figure>
+    </div>
+  </section>
+
+  <!-- 甜蜜问答 -->
+  <section id="quiz" class="section">
+    <h2 class="section-title">甜蜜小问答</h2>
+    <div class="quiz glass">
+      <p>第一次约会我们吃的什么</p>
+      <div class="options">
+        <button class="opt" data-correct="true">A. 火锅</button>
+        <button class="opt" data-correct="false">B. 海鲜自助</button>
+        <button class="opt" data-correct="false">C. 烧烤</button>
+      </div>
+      <div id="quizResult" class="result" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <!-- 隐藏彩蛋（Konami Code 解锁） -->
+  <section id="easter" class="section hidden">
+    <h2 class="section-title">隐藏的小惊喜</h2>
+    <div class="easter glass">
+      <p>被贝贝发现啦！给最厉害的贝贝，解锁一枚超大爱心！</p>
+      <button id="megaHeart" class="btn-heart big">❤</button>
+    </div>
+  </section>
+
+  <!-- 音乐播放器 -->
+  <section id="music" class="section">
+    <h2 class="section-title">我们的 BGM</h2>
+    <div class="player glass">
+      <audio id="audio" src="assets\陈柯宇 - 直到遇见了你,我只喜欢你.mp3" preload="auto" autoplay loop></audio>
+      <div class="controls">
+        <button id="play" class="btn">播放/暂停</button>
+        <input id="volume" type="range" min="0" max="1" step="0.01" value="0.6" aria-label="音量" />
+        <span id="trackName">直到遇见了你,我只喜欢你</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="footer">
+    <div class="glass">
+      <p>Made with ❤ 只给贝贝</p>
+      <small>小提示：输入 ↑ ↑ ↓ ↓ ← → ← → B A 解锁隐藏彩蛋</small>
+    </div>
+  </footer>
+
+  <!-- 轻量弹窗与灯箱容器 -->
+  <dialog id="lightbox" class="lightbox"><img alt="预览" id="lightboxImg" /><form method="dialog"><button class="btn">关闭</button></form></dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>

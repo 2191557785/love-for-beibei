@@ -1,0 +1,323 @@
+/* Fonts: Great Vibes (display) + Nunito (ui) */
+:root{
+  --bg: #0e0c15;
+  --bg-2:#1a1724;
+  --primary:#ff6fb5;
+  --primary-2:#ff95c9;
+  --accent:#7dd3fc;
+  --text:#f8f7fb;
+  --muted:#bfbacf;
+  --glass: rgba(255,255,255,0.06);
+  --glass-border: rgba(255,255,255,0.2);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  color:var(--text);
+  font-family:"Nunito", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: var(--bg);
+  overflow-x:hidden;
+  position:relative;
+}
+
+/* 照片墙背景 */
+.photo-wall{
+  position:fixed;
+  inset:-50px;
+  z-index:-2;
+  overflow:hidden;
+  background: linear-gradient(180deg, #0b0a12 0%, #120f1a 100%);
+}
+
+.photo-wall::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: rgba(14, 12, 21, 0.55);
+  backdrop-filter: blur(3px);
+  z-index:1;
+}
+
+.photo-item{
+  position:absolute;
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  opacity:0.8;
+  border: 2px solid rgba(255,255,255,0.15);
+  will-change: opacity;
+  backface-visibility: hidden;
+  contain: layout style paint;
+}
+
+/* 照片轮换时的特殊效果 */
+.photo-item.rotating-out{
+  animation: rotateOut 0.8s ease-out forwards;
+}
+
+.photo-item.rotating-in{
+  animation: rotateIn 1.2s ease-in forwards;
+}
+
+@keyframes rotateOut{
+  0%{
+    opacity: 0.8;
+    transform: rotate(var(--rotation)) scale(1) translateZ(0);
+  }
+  100%{
+    opacity: 0;
+    transform: rotate(calc(var(--rotation) + 15deg)) scale(0.8) translateZ(0);
+  }
+}
+
+@keyframes rotateIn{
+  0%{
+    opacity: 0;
+    transform: rotate(calc(var(--rotation) - 15deg)) scale(1.2) translateZ(0);
+  }
+  100%{
+    opacity: 0.8;
+    transform: rotate(var(--rotation)) scale(1) translateZ(0);
+  }
+}
+
+.photo-item img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  filter: blur(0.8px) brightness(0.9) saturate(1.4);
+  transform: translateZ(0);
+}
+
+/* 缓缓出现的动画 */
+.fade-in-photo{
+  animation: fadeInPhoto 2s ease-out forwards, photoFlicker 6s ease-in-out infinite;
+}
+
+@keyframes fadeInPhoto{
+  0%{
+    opacity:0;
+    transform: rotate(var(--rotation)) scale(0.8);
+  }
+  100%{
+    opacity:0.8;
+    transform: rotate(var(--rotation)) scale(1);
+  }
+}
+
+/* 持续闪动变换效果 - 超级优化版本 */
+@keyframes photoFlicker{
+  0%, 100%{
+    opacity:0.8;
+  }
+  50%{
+    opacity:0.6;
+  }
+}
+
+/* Background canvas */
+#bg-canvas{
+  position:fixed; inset:0; width:100%; height:100%; z-index:-1;
+}
+
+/* Glass utility */
+.glass{
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(10px) saturate(130%);
+  -webkit-backdrop-filter: blur(10px) saturate(130%);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+}
+
+/* Hero */
+.hero{
+  position:relative; min-height:100svh; display:grid; place-items:center; padding:96px 20px 56px;
+}
+.hero-inner{
+  max-width: min(960px, 92vw); padding:48px; text-align:center;
+}
+.brand{
+  font-family:"Great Vibes", cursive; font-size: clamp(40px, 8vw, 84px); margin:0 0 8px; color:var(--primary-2);
+}
+.typewriter{font-size:clamp(16px, 2.8vw, 22px); color:var(--muted); margin:8px 0 24px; min-height:2.2em}
+.cursor{display:inline-block; margin-left:4px; color:var(--primary); animation:blink 1s steps(1,end) infinite}
+@keyframes blink{50%{opacity:0}}
+
+.cta{margin:18px 0 8px}
+.btn{cursor:pointer; border:none; padding:10px 16px; border-radius:12px; background:linear-gradient(135deg,var(--accent),#c4b5fd); color:#0b1020; font-weight:800}
+.btn:active{transform:translateY(1px)}
+
+.btn-heart{
+  display:inline-flex; align-items:center; gap:8px; padding:14px 20px; border-radius:999px; border:0; cursor:pointer;
+  background: linear-gradient(135deg, var(--primary), var(--primary-2)); color:#2a0f1e; font-weight:900;
+  box-shadow: 0 10px 20px rgba(255,105,180,0.35);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.btn-heart .heart{display:inline-block; filter:drop-shadow(0 2px 4px rgba(0,0,0,.2)); animation:beat 1.2s ease-in-out infinite}
+.btn-heart:hover{transform:translateY(-2px); box-shadow:0 14px 26px rgba(255,105,180,0.5)}
+@keyframes beat{0%,100%{transform:scale(1)} 25%{transform:scale(1.15)} 50%{transform:scale(0.92)} 75%{transform:scale(1.08)}}
+.btn-heart.big{font-size:28px; padding:18px 26px}
+
+.meta{margin-top:12px; color:var(--muted); font-size:14px}
+.scroll-hint{position:absolute; bottom:20px; left:50%; transform:translateX(-50%); color:var(--muted); font-size:12px; letter-spacing:.2em; text-transform:uppercase; animation:float 2.2s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,-6px)}}
+
+/* Sections */
+.section{padding:72px 20px}
+.section-title{max-width:960px; margin:0 auto 22px; padding:0 4px; font-size: clamp(22px, 3.8vw, 34px); font-weight:900}
+.section-title::after{content:""; display:block; width:80px; height:4px; border-radius:2px; background:linear-gradient(90deg,var(--primary), transparent); margin-top:10px}
+
+/* Timeline */
+.timeline{max-width:960px; margin:0 auto; position:relative}
+.timeline::before{content:""; position:absolute; left:20px; top:0; bottom:0; width:2px; background:linear-gradient(var(--primary), transparent)}
+.tl-item{display:grid; grid-template-columns:64px 1fr; gap:16px; margin:22px 0}
+.tl-item .date{color:var(--primary-2); font-weight:800; padding-top:8px}
+.tl-item .card{padding:14px}
+.tl-item img{width:100%; height:auto; aspect-ratio:3/4; max-height:300px; object-fit:cover; object-position:50% 35%; border-radius:12px; display:block}
+
+/* Grid gallery */
+.grid{max-width:1100px; margin:0 auto; display:grid; grid-template-columns:repeat(4,1fr); gap:14px}
+.grid figure{margin:0; overflow:hidden; border-radius:14px; background:var(--glass); border:1px solid var(--glass-border)}
+.grid img{width:100%; height:auto; aspect-ratio:1/1; object-fit:cover; object-position:50% 35%; filter:saturate(1.05) contrast(1.02)}
+.grid figure:hover img{transform:scale(1.04); transition:transform .4s ease}
+.grid figcaption{padding:8px 10px; color:var(--muted); font-size:14px}
+
+/* Quiz */
+.quiz{max-width:720px; margin:0 auto; padding:18px}
+.options{display:flex; flex-wrap:wrap; gap:10px}
+.opt{padding:10px 14px; border-radius:10px; border:1px solid var(--glass-border); background:rgba(255,255,255,0.05); color:var(--text); cursor:pointer}
+.opt.correct{background:linear-gradient(135deg,#86efac,#34d399); color:#052e1b; border-color:transparent}
+.opt.wrong{background:linear-gradient(135deg,#fecaca,#f87171); color:#4c0519; border-color:transparent}
+.result{margin-top:10px; min-height:1.6em; color:var(--muted)}
+
+/* Easter */
+.hidden{display:none}
+.easter{max-width:720px; margin:0 auto; padding:20px; text-align:center}
+
+/* Player */
+.player{max-width:720px; margin:0 auto; padding:18px}
+.controls{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+#volume{width:min(220px,50vw)}
+
+/* Footer */
+.footer{padding:40px 18px 60px; text-align:center; color:var(--muted)}
+.footer .glass{max-width:960px; margin:0 auto; padding:16px}
+
+/* Dialogs */
+dialog.sweet, dialog.lightbox{border:1px solid var(--glass-border); background:rgba(10,10,18,0.8); color:var(--text); border-radius:16px; padding:0; width:min(680px,92vw)}
+dialog::backdrop{background:rgba(0,0,0,0.6); backdrop-filter: blur(2px)}
+dialog form{padding:18px}
+dialog h3{margin:0 0 10px}
+.lightbox img{max-width:min(88vw,900px); max-height:76vh; display:block; border-radius:12px}
+
+/* Reveal on scroll */
+.reveal{opacity:0; transform:translateY(18px); transition: opacity .7s ease, transform .7s ease}
+.reveal.visible{opacity:1; transform:none}
+
+/* 飘落的爱心 */
+.floating-heart{
+  position:fixed;
+  top:-50px;
+  pointer-events:none;
+  z-index:9998;
+  animation: float-down linear forwards;
+  opacity:0.8;
+  filter: drop-shadow(0 2px 8px rgba(255,105,180,0.4));
+}
+@keyframes float-down{
+  0%{
+    transform: translateY(0) rotate(0deg);
+    opacity:0.8;
+  }
+  100%{
+    transform: translateY(100vh) rotate(360deg);
+    opacity:0;
+  }
+}
+
+/* 鼠标跟随特效 */
+.mouse-trail{
+  position:absolute;
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+  pointer-events:none;
+  z-index:9997;
+  animation: trail-fade 1s ease-out forwards;
+  transform: translate(-50%, -50%);
+}
+@keyframes trail-fade{
+  0%{
+    transform: translate(-50%, -50%) scale(1);
+    opacity:0.8;
+  }
+  100%{
+    transform: translate(-50%, -50%) scale(3);
+    opacity:0;
+  }
+}
+
+/* 烟花粒子 */
+.firework-particle{
+  position:fixed;
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  pointer-events:none;
+  z-index:9998;
+  animation: firework-burst 1s ease-out forwards;
+  box-shadow: 0 0 8px currentColor;
+}
+@keyframes firework-burst{
+  0%{
+    transform: translate(-50%, -50%) scale(1);
+    opacity:1;
+  }
+  100%{
+    transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0);
+    opacity:0;
+  }
+}
+
+/* 秘密消息 */
+.secret-message{
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  color:#fff;
+  padding:20px 40px;
+  border-radius:16px;
+  font-size:24px;
+  font-weight:800;
+  z-index:10000;
+  box-shadow: 0 20px 60px rgba(255,105,180,0.6);
+  animation: secret-pop 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  pointer-events:none;
+}
+@keyframes secret-pop{
+  0%{
+    transform: translate(-50%, -50%) scale(0) rotate(-180deg);
+    opacity:0;
+  }
+  100%{
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+    opacity:1;
+  }
+}
+
+/* Responsive */
+@media (max-width: 900px){
+  .grid{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width: 560px){
+  .tl-item{grid-template-columns:48px 1fr}
+  .tl-item img{aspect-ratio:4/5}
+  .grid img{aspect-ratio:1/1}
+  .hero-inner{padding:28px}
+  .secret-message{font-size:18px; padding:16px 32px}
+}
