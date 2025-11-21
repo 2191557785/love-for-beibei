@@ -28,7 +28,7 @@ body {
   overflow-x: hidden;
   position: relative;
   -webkit-overflow-scrolling: touch;
-  touch-action: manipulation;
+  touch-action: pan-y pinch-zoom;
 }
 
 /* 照片墙背景 - 移动端优化 */
