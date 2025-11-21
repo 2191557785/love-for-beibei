@@ -574,9 +574,9 @@ function initLightbox() {
   });
 })();
 
-// 初始化 - 移动端优化
+// 初始化 - 移动端优化（无背景图片）
 window.addEventListener('DOMContentLoaded', () => {
-  initPhotoWall();
+  // initPhotoWall(); // 移除背景照片墙
   setName();
   updateDays();
   typewriter();
