@@ -727,3 +727,86 @@ button, .option {
   margin: 0;
   opacity: 0.9;
 }
+
+/* 移动端安装指南样式 */
+.guide-content {
+  background: var(--card-bg);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 25px;
+  max-width: 350px;
+  width: 100%;
+  color: white;
+  text-align: center;
+}
+
+.guide-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.guide-icon {
+  font-size: 2rem;
+}
+
+.guide-header h2 {
+  flex: 1;
+  margin: 0 15px;
+  font-size: 1.3rem;
+}
+
+.guide-close {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.guide-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.install-steps h3 {
+  margin: 0 0 15px 0;
+  color: var(--accent);
+}
+
+.step {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 10px;
+  text-align: left;
+  font-size: 0.95rem;
+}
+
+.guide-footer {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.guide-footer p {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
