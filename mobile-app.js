@@ -280,19 +280,21 @@ function initTouchTrail() {
   let lastTime = 0;
   
   document.addEventListener('touchmove', (e) => {
-    e.preventDefault(); // 防止滚动
-    const now = Date.now();
-    if (now - lastTime < 150) return;
-    lastTime = now;
-    
-    const touch = e.touches[0];
-    const trail = document.createElement('div');
-    trail.className = 'touch-trail';
-    trail.style.left = touch.pageX + 'px';
-    trail.style.top = touch.pageY + 'px';
-    document.body.appendChild(trail);
-    setTimeout(() => trail.remove(), 800);
-  }, { passive: false });
+    // 只在特定元素上阻止滚动，不是全局阻止
+    if (e.target.closest('.hero')) {
+      const now = Date.now();
+      if (now - lastTime < 150) return;
+      lastTime = now;
+      
+      const touch = e.touches[0];
+      const trail = document.createElement('div');
+      trail.className = 'touch-trail';
+      trail.style.left = touch.pageX + 'px';
+      trail.style.top = touch.pageY + 'px';
+      document.body.appendChild(trail);
+      setTimeout(() => trail.remove(), 800);
+    }
+  }, { passive: true });
 }
 
 // 双击烟花效果
@@ -382,7 +384,7 @@ function initPhotoWall() {
   const photoWall = document.createElement('div');
   photoWall.className = 'photo-wall';
   
-  // 获取所有照片路径（移动端减少数量）
+  // 获取所有照片路径（使用实际存在的照片）
   const photos = [
     'background_photo/05c667d4c3901466caa43d86605c8896.jpg',
     'background_photo/17c04ded88e2bdad483a73e20aba29a0.jpg',
@@ -391,42 +393,6 @@ function initPhotoWall() {
     'background_photo/19e3b947af4dec061f2a6dbeb798d1d8.jpg',
     'background_photo/1c410e6c22c855c560b8cc585e6d3aa7.jpg',
     'background_photo/2032a170a05dbaa8514ead827f59916a.jpg',
-    'background_photo/20a0e6b7b5b2b8e0e0e0e0e0e0e0e0e0.jpg',
-    'background_photo/2a7b8c9d0e1f2g3h4i5j6k7l8m9n0o1p.jpg',
-    'background_photo/2b8c9d0e1f2g3h4i5j6k7l8m9n0o1p2q.jpg',
-    'background_photo/2c9d0e1f2g3h4i5j6k7l8m9n0o1p2q3r.jpg',
-    'background_photo/2d0e1f2g3h4i5j6k7l8m9n0o1p2q3r4s.jpg',
-    'background_photo/2e1f2g3h4i5j6k7l8m9n0o1p2q3r4s5t.jpg',
-    'background_photo/2f2g3h4i5j6k7l8m9n0o1p2q3r4s5t6u.jpg',
-    'background_photo/30g3h4i5j6k7l8m9n0o1p2q3r4s5t6u7v.jpg',
-    'background_photo/31h4i5j6k7l8m9n0o1p2q3r4s5t6u7v8w.jpg',
-    'background_photo/32i5j6k7l8m9n0o1p2q3r4s5t6u7v8w9x.jpg',
-    'background_photo/33j6k7l8m9n0o1p2q3r4s5t6u7v8w9x0y.jpg',
-    'background_photo/34k7l8m9n0o1p2q3r4s5t6u7v8w9x0y1z.jpg',
-    'background_photo/35l8m9n0o1p2q3r4s5t6u7v8w9x0y1z2a.jpg',
-    'background_photo/36m9n0o1p2q3r4s5t6u7v8w9x0y1z2a3b.jpg',
-    'background_photo/37n0o1p2q3r4s5t6u7v8w9x0y1z2a3b4c.jpg',
-    'background_photo/38o1p2q3r4s5t6u7v8w9x0y1z2a3b4c5d.jpg',
-    'background_photo/39p2q3r4s5t6u7v8w9x0y1z2a3b4c5d6e.jpg',
-    'background_photo/40q3r4s5t6u7v8w9x0y1z2a3b4c5d6e7f.jpg',
-    'background_photo/41r4s5t6u7v8w9x0y1z2a3b4c5d6e7f8g.jpg',
-    'background_photo/42s5t6u7v8w9x0y1z2a3b4c5d6e7f8g9h.jpg',
-    'background_photo/43t6u7v8w9x0y1z2a3b4c5d6e7f8g9h0i.jpg',
-    'background_photo/44u7v8w9x0y1z2a3b4c5d6e7f8g9h0i1j.jpg',
-    'background_photo/45v8w9x0y1z2a3b4c5d6e7f8g9h0i1j2k.jpg',
-    'background_photo/46w9x0y1z2a3b4c5d6e7f8g9h0i1j2k3l.jpg',
-    'background_photo/47x0y1z2a3b4c5d6e7f8g9h0i1j2k3l4m.jpg',
-    'background_photo/48y1z2a3b4c5d6e7f8g9h0i1j2k3l4m5n.jpg',
-    'background_photo/49z2a3b4c5d6e7f8g9h0i1j2k3l4m5n6o.jpg',
-    'background_photo/50a3b4c5d6e7f8g9h0i1j2k3l4m5n6o7p.jpg',
-    'background_photo/51b4c5d6e7f8g9h0i1j2k3l4m5n6o7p8q.jpg',
-    'background_photo/52c5d6e7f8g9h0i1j2k3l4m5n6o7p8q9r.jpg',
-    'background_photo/53d6e7f8g9h0i1j2k3l4m5n6o7p8q9r0s.jpg',
-    'background_photo/54e7f8g9h0i1j2k3l4m5n6o7p8q9r0s1t.jpg',
-    'background_photo/55f8g9h0i1j2k3l4m5n6o7p8q9r0s1t2u.jpg',
-    'background_photo/56g9h0i1j2k3l4m5n6o7p8q9r0s1t2u3v.jpg',
-    'background_photo/57h0i1j2k3l4m5n6o7p8q9r0s1t2u3v4w.jpg',
-    'background_photo/58i1j2k3l4m5n6o7p8q9r0s1t2u3v4w5x.jpg',
     'background_photo/f05790ae21818af5fa438e1ae075438a.jpg',
     'background_photo/f13c89252e1cd363fd0d4e1ba16d085e.jpg',
     'background_photo/f5b1f76c2785e49e0fb690f174de0d4f.jpg',
@@ -629,18 +595,22 @@ window.addEventListener('DOMContentLoaded', () => {
   initLongPressEaster();
 });
 
-// 防止移动端缩放
+// 防止移动端缩放（但不阻止滚动）
 document.addEventListener('touchstart', function(event) {
   if (event.touches.length > 1) {
     event.preventDefault();
   }
-});
+}, { passive: false });
 
+// 防止双击缩放，但允许滚动
 let lastTouchEnd = 0;
 document.addEventListener('touchend', function(event) {
   const now = (new Date()).getTime();
   if (now - lastTouchEnd <= 300) {
-    event.preventDefault();
+    // 只在非滚动元素上阻止双击
+    if (!event.target.closest('.section, .timeline, .quiz')) {
+      event.preventDefault();
+    }
   }
   lastTouchEnd = now;
-}, false);
+}, { passive: false });
