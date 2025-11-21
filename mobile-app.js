@@ -15,6 +15,7 @@ class MobileLoveApp {
     this.elements = {};
     this.isPlaying = false;
     this.longPressTimer = null;
+    this.deferredPrompt = null;
     
     this.init();
   }
@@ -28,6 +29,7 @@ class MobileLoveApp {
     this.initAudio();
     this.initShakeDetection();
     this.initPhotoWall();
+    this.initPWA();
   }
 
   // 绑定DOM元素
@@ -535,6 +537,139 @@ class MobileLoveApp {
         }, 1000);
       }, index * 500); // 错开替换时间
     });
+  }
+
+  // 初始化PWA功能
+  initPWA() {
+    // 注册Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(registration => {
+            console.log('SW registered: ', registration);
+          })
+          .catch(registrationError => {
+            console.log('SW registration failed: ', registrationError);
+          });
+      });
+    }
+
+    // 监听PWA安装提示
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      this.deferredPrompt = e;
+      this.showInstallPrompt();
+    });
+
+    // 监听PWA安装完成
+    window.addEventListener('appinstalled', () => {
+      console.log('PWA安装成功！');
+      this.showInstallSuccess();
+    });
+  }
+
+  // 显示安装提示
+  showInstallPrompt() {
+    // 创建安装提示
+    const installBanner = document.createElement('div');
+    installBanner.className = 'install-banner';
+    installBanner.innerHTML = `
+      <div class="install-content">
+        <div class="install-icon">📱</div>
+        <div class="install-text">
+          <h3>安装"贝贝的爱"APP</h3>
+          <p>添加到主屏幕，随时查看我们的爱</p>
+        </div>
+        <button class="install-btn" id="installBtn">安装</button>
+        <button class="install-close" id="installClose">×</button>
+      </div>
+    `;
+
+    // 添加样式
+    installBanner.style.cssText = `
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      right: 20px;
+      background: linear-gradient(45deg, var(--primary), var(--accent));
+      border-radius: 15px;
+      padding: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      z-index: 10000;
+      animation: slideUp 0.3s ease-out;
+    `;
+
+    document.body.appendChild(installBanner);
+
+    // 绑定事件
+    const installBtn = installBanner.querySelector('#installBtn');
+    const closeBtn = installBanner.querySelector('#installClose');
+
+    installBtn.addEventListener('click', () => {
+      this.installPWA();
+      installBanner.remove();
+    });
+
+    closeBtn.addEventListener('click', () => {
+      installBanner.remove();
+    });
+
+    // 5秒后自动隐藏
+    setTimeout(() => {
+      if (installBanner.parentNode) {
+        installBanner.remove();
+      }
+    }, 8000);
+  }
+
+  // 安装PWA
+  async installPWA() {
+    if (!this.deferredPrompt) return;
+
+    this.deferredPrompt.prompt();
+    const { outcome } = await this.deferredPrompt.userChoice;
+    
+    if (outcome === 'accepted') {
+      console.log('用户接受了安装');
+    } else {
+      console.log('用户拒绝了安装');
+    }
+    
+    this.deferredPrompt = null;
+  }
+
+  // 显示安装成功消息
+  showInstallSuccess() {
+    const successMsg = document.createElement('div');
+    successMsg.className = 'install-success';
+    successMsg.innerHTML = `
+      <div class="success-content">
+        <div class="success-icon">🎉</div>
+        <h3>安装成功！</h3>
+        <p>现在可以从主屏幕直接打开啦</p>
+      </div>
+    `;
+
+    successMsg.style.cssText = `
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 30px;
+      text-align: center;
+      z-index: 10000;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      animation: modalPop 0.3s ease-out;
+    `;
+
+    document.body.appendChild(successMsg);
+
+    setTimeout(() => {
+      successMsg.remove();
+    }, 3000);
   }
 }
 
